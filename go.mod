@@ -1,4 +1,4 @@
-module github.com/nmohnblatt/cmatching_c
+module github.com/nmohnblatt/cd_client
 
 go 1.14
 
