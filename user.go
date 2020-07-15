@@ -11,7 +11,8 @@ type user struct {
 	pk1, pk2, sk1, sk2 kyber.Point
 }
 
-// Creates a new user with the name and phone number specified
+// Creates a new user with the name and phone number specified.
+// Automatically derive public keys. (Private keys need to be provided by server)
 func newUser(Name, Number string) *user {
 	var u user
 
