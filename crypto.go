@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+
 	"go.dedis.ch/kyber/v3"
 )
 
@@ -37,4 +39,18 @@ func unblind(p kyber.Point, blindingFactor kyber.Scalar) kyber.Point {
 	inverse := blindingFactor.Clone()
 	unblinded.Mul(inverse.Inv(blindingFactor), p)
 	return unblinded
+}
+
+func xorBytes(a, b []byte) ([]byte, error) {
+	var c []byte
+	if len(a) != len(b) {
+		return nil, errors.New("xorBytes: arguments must be of the same length")
+	}
+
+	for i := 0; i < len(a); i++ {
+		buf := (int(a[i]) + int(b[i])) % 256
+		c = append(c, byte(buf))
+	}
+
+	return c, nil
 }

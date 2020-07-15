@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"testing"
 
 	"go.dedis.ch/kyber/v3/util/random"
@@ -58,4 +59,38 @@ func TestBlindUnblindGT(t *testing.T) {
 		t.Errorf("unblind: GT Point was not recovered")
 	}
 
+}
+
+func TestXorBytes(t *testing.T) {
+	// Check for correct error handling
+	a := []byte{1, 2}
+	b := []byte{0, 0, 0}
+	_, err := xorBytes(a, b)
+	if err == nil {
+		t.Errorf("xor: allowed to XOR arguments of different lengths")
+	}
+
+	// Check XOR without modular reduction
+	a = []byte{1, 2}
+	b = []byte{3, 4}
+	want := []byte{4, 6}
+	c, err := xorBytes(a, b)
+	if err != nil {
+		t.Errorf("xor: error arose: %s", err)
+	}
+	if bytes.Compare(c, want) != 0 {
+		t.Errorf("xor: not added properly before modular reduction")
+	}
+
+	// Check XOR with modular reduction
+	a = []byte{255, 200}
+	b = []byte{1, 100}
+	want = []byte{0, 44}
+	c, err = xorBytes(a, b)
+	if err != nil {
+		t.Errorf("xor: error arose: %s", err)
+	}
+	if bytes.Compare(c, want) != 0 {
+		t.Errorf("xor: not added properly after modular reduction")
+	}
 }
