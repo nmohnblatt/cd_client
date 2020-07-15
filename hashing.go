@@ -20,6 +20,9 @@ func hashtoG1(msg []byte) kyber.Point {
 	return hashed
 }
 
+// Hashes a message to a point in G2 by using the message as a seed for the Pick method
+// !!! Unsure whether this is collision resistant !!!
+// To be replaced by a secure version that follows https://tools.ietf.org/html/draft-irtf-cfrg-hash-to-curve-07
 func insecureHashtoG2(msg []byte) kyber.Point {
 	seed := blake2xb.New(msg)
 	hashed := suite.G2().Point().Pick(seed)

@@ -24,6 +24,7 @@ func newUser(Name, Number string) *user {
 }
 
 /*
+// Request private key from a TCP server
 func (u *user) requestKeysTCP(server string) {
 	conn, err := net.Dial("tcp", server)
 	if err != nil {
@@ -40,6 +41,7 @@ func (u *user) requestKeysTCP(server string) {
 }
 */
 
+// Request private key from a dummy server (i.e. one that runs locally)
 func (u *user) dummyRequestKeys() {
 	// Use a fixed server key for testing purposes
 	seed := blake2xb.New([]byte("this is a seed"))
