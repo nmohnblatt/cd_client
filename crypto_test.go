@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"testing"
 
+	"go.dedis.ch/kyber/v3"
 	"go.dedis.ch/kyber/v3/util/random"
 )
 
@@ -92,5 +93,71 @@ func TestXorBytes(t *testing.T) {
 	}
 	if bytes.Compare(c, want) != 0 {
 		t.Errorf("xor: not added properly after modular reduction")
+	}
+}
+
+func TestSumG1Points(t *testing.T) {
+	n := 2
+	var scalars []kyber.Scalar
+
+	for i := 0; i < n; i++ {
+		scalars = append(scalars, suite.GT().Scalar().Pick(random.New()))
+	}
+
+	scalarSum := sumScalars(scalars...)
+
+	p := suite.G1().Point().Pick(random.New())
+
+	want := suite.G1().Point().Mul(scalarSum, p)
+
+	var points []kyber.Point
+	for _, X := range scalars {
+		points = append(points, suite.G1().Point().Mul(X, p))
+	}
+
+	test := sumG1Points(points...)
+
+	if !test.Equal(want) {
+		t.Errorf("did not add points properly")
+	}
+
+}
+
+func TestSumG2Points(t *testing.T) {
+	n := 4
+	var scalars []kyber.Scalar
+
+	for i := 0; i < n; i++ {
+		scalars = append(scalars, suite.GT().Scalar().Pick(random.New()))
+	}
+
+	scalarSum := sumScalars(scalars...)
+
+	p := suite.G2().Point().Pick(random.New())
+
+	want := suite.G2().Point().Mul(scalarSum, p)
+
+	var points []kyber.Point
+	for _, X := range scalars {
+		points = append(points, suite.G2().Point().Mul(X, p))
+	}
+
+	test := sumG2Points(points...)
+
+	if !test.Equal(want) {
+		t.Errorf("did not add points properly")
+	}
+
+}
+
+func TestSumScalars(t *testing.T) {
+	a := suite.GT().Scalar().Pick(random.New())
+	b := suite.GT().Scalar().Pick(random.New())
+	c := suite.GT().Scalar().Pick(random.New())
+	sumAB := suite.GT().Scalar().Add(a, b)
+	sumABC := suite.G1().Scalar().Add(sumAB, c)
+
+	if !sumScalars(a, b, c).Equal(sumABC) {
+		t.Errorf("Did not add scalars correctly")
 	}
 }

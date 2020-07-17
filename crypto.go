@@ -41,6 +41,7 @@ func unblind(p kyber.Point, blindingFactor kyber.Scalar) kyber.Point {
 	return unblinded
 }
 
+// Bytewise XOR opertaion for same-sized slices of bytes
 func xorBytes(a, b []byte) ([]byte, error) {
 	var c []byte
 	if len(a) != len(b) {
@@ -53,4 +54,35 @@ func xorBytes(a, b []byte) ([]byte, error) {
 	}
 
 	return c, nil
+}
+
+// Sum of points in G1.
+// Note to self: (slices can be passed as arguments but need to be unpacked using the ... operator)
+func sumG1Points(Points ...kyber.Point) kyber.Point {
+	buf := suite.G1().Point()
+	for _, X := range Points {
+		buf.Add(buf, X)
+	}
+	return buf
+}
+
+// Sum of points in G2.
+// Note to self: (slices can be passed as arguments but need to be unpacked using the ... operator)
+func sumG2Points(Points ...kyber.Point) kyber.Point {
+	buf := suite.G2().Point()
+	for _, X := range Points {
+		buf.Add(buf, X)
+	}
+	return buf
+}
+
+// Sum of scalars.
+// Note to self: (slices can be passed as arguments but need to be unpacked using the ... operator)
+func sumScalars(Scalars ...kyber.Scalar) kyber.Scalar {
+	buf := suite.G1().Scalar()
+	for _, X := range Scalars {
+		buf.Add(buf, X)
+	}
+
+	return buf
 }
