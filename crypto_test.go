@@ -118,7 +118,7 @@ func TestSumG1Points(t *testing.T) {
 	test := sumG1Points(points...)
 
 	if !test.Equal(want) {
-		t.Errorf("did not add points properly")
+		t.Errorf("sumG1: did not add G1 points properly")
 	}
 
 }
@@ -145,7 +145,7 @@ func TestSumG2Points(t *testing.T) {
 	test := sumG2Points(points...)
 
 	if !test.Equal(want) {
-		t.Errorf("did not add points properly")
+		t.Errorf("sum G2: did not add G2 points properly")
 	}
 
 }
@@ -158,6 +158,6 @@ func TestSumScalars(t *testing.T) {
 	sumABC := suite.G1().Scalar().Add(sumAB, c)
 
 	if !sumScalars(a, b, c).Equal(sumABC) {
-		t.Errorf("Did not add scalars correctly")
+		t.Errorf("sumScalar: did not add scalars correctly")
 	}
 }
