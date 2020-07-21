@@ -45,10 +45,12 @@ func TestKeyDerivationLocal(t *testing.T) {
 }
 
 func TestKeyDerivationMultiLocal(t *testing.T) {
-	n := 3
+	// Vary the number of servers
+	n := 6
 
 	var servers []server
 
+	// Using dummy servers to test locally (no connection to server)
 	for i := 0; i < n; i++ {
 		servers = append(servers, newDummyServer(i))
 	}
