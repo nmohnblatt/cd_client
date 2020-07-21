@@ -7,7 +7,7 @@ This application interacts with the matching server-side application "cd_server"
 ## Current Functionnality
 - Generate public keys from human-readible identifiers
 - User computes shared key material with contact (requires to obtain private keys from servers)
-- Multi-server version implemented (no theshold crypto yet)
+- Multi-server version implemented (no threshold crypto yet)
 
 ## TODO
 - Networked version of the service
