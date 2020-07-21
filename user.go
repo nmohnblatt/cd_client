@@ -71,4 +71,18 @@ func (u *user) aggregatePrivateKeys(sk1Shares, sk2Shares []kyber.Point) error {
 	u.sk2 = sumG2Points(sk2Shares...)
 
 	return nil
+
+}
+
+func (u *user) obtainPrivateKeys(servers ...server) {
+	buf1 := suite.G1().Point()
+	buf2 := suite.G2().Point()
+	for _, s := range servers {
+		partial1, partial2 := s.sign(u.pk1, u.pk2)
+		buf1.Add(buf1, partial1)
+		buf2.Add(buf2, partial2)
+	}
+
+	u.sk1 = buf1
+	u.sk2 = buf2
 }
