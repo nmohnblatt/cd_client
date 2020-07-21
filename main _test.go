@@ -7,15 +7,16 @@ import (
 )
 
 func TestKeyDerivation(t *testing.T) {
+	s1 := newServer("1", "")
 	// setup three users: Alice, Bob and Charlie
 	alice := newUser("Alice", "07111111111")
 	bob := newUser("Bob", "07222222222")
 	charlie := newUser("Charlie", "07333333333")
 
 	// All users get their private keys
-	alice.dummyRequestKeys()
-	bob.dummyRequestKeys()
-	charlie.dummyRequestKeys()
+	alice.sk1, alice.sk2 = dummyRequestKeys(alice, s1.ID)
+	bob.sk1, bob.sk2 = dummyRequestKeys(bob, s1.ID)
+	charlie.sk1, charlie.sk2 = dummyRequestKeys(charlie, s1.ID)
 
 	// Alice and Bob compute shared keys. Charlie tries to use his key material to find A and B's shared keys
 	aSharedab, aSharedba := deriveSharedKeys(alice, bob.phoneNumber)

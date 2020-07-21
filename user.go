@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+
 	"go.dedis.ch/kyber/v3"
 	"go.dedis.ch/kyber/v3/xof/blake2xb"
 )
@@ -43,11 +45,30 @@ func (u *user) requestKeysTCP(server string) {
 */
 
 // Request private key from a dummy server (i.e. one that runs locally)
-func (u *user) dummyRequestKeys() {
+func dummyRequestKeys(u *user, serverID string) (kyber.Point, kyber.Point) {
 	// Use a fixed server key for testing purposes
-	seed := blake2xb.New([]byte("this is a seed"))
+	seed := blake2xb.New([]byte("this is a seed" + serverID))
 	serverKey := suite.GT().Scalar().Pick(seed)
 
-	u.sk1 = suite.G1().Point().Mul(serverKey, u.pk1)
-	u.sk2 = suite.G2().Point().Mul(serverKey, u.pk2)
+	sk1 := suite.G1().Point().Mul(serverKey, u.pk1)
+	sk2 := suite.G2().Point().Mul(serverKey, u.pk2)
+
+	return sk1, sk2
+}
+
+// Aggregates private key shares obtained from various servers.
+// This version does not implement threshold crypto (i.e. need keys from all servers!)
+func (u *user) aggregatePrivateKeys(sk1Shares, sk2Shares []kyber.Point) error {
+	if len(sk1Shares) != len(sk2Shares) {
+		return errors.New("aggregatePrivateKeys: arguments are of different length")
+	}
+
+	if len(sk1Shares) == 0 {
+		return errors.New("aggregatePrivateKeys: cannot process empty slice")
+	}
+
+	u.sk1 = sumG1Points(sk1Shares...)
+	u.sk2 = sumG2Points(sk2Shares...)
+
+	return nil
 }

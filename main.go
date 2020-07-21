@@ -30,7 +30,7 @@ func initialiseUser() *user {
 	fmt.Scanf("%s", &Number)
 	u1 := newUser(Name, Number)
 	fmt.Println(prompt + "Fetching private keys from server...")
-	u1.dummyRequestKeys()
+	u1.sk1, u1.sk2 = dummyRequestKeys(u1, "server1")
 	fmt.Println(prompt + "Done")
 
 	return u1
