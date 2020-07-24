@@ -18,7 +18,7 @@ func TestKeyDerivationLocal(t *testing.T) {
 	charlie.obtainPrivateKeys(s1)
 
 	// Alice and Bob compute shared keys. Charlie tries to use his key material to find A and B's shared keys
-	// Format xSharedxy = e(H(x)^s, H(y)) i.e. the key with x in G1 and y in G2 computed using x's private key
+	// Format xSharedxy = e(H(x)^s, H(y)) i.e. the shared point in GT with x in G1 and y in G2 computed using x's private key
 	aSharedab, aSharedba := deriveSharedKeys(alice, bob.phoneNumber)
 	bSharedba, bSharedab := deriveSharedKeys(bob, alice.phoneNumber)
 	cSharedca, cSharedac := deriveSharedKeys(charlie, alice.phoneNumber)
@@ -64,6 +64,7 @@ func TestKeyDerivationMultiLocal(t *testing.T) {
 	charlie.obtainPrivateKeys(servers...)
 
 	// Alice and Bob compute shared keys. Charlie tries to use his key material to find A and B's shared keys
+	// Format xSharedxy = e(H(x)^s, H(y)) i.e. the shared point in GT with x in G1 and y in G2 computed using x's private key
 	aSharedab, aSharedba := deriveSharedKeys(alice, bob.phoneNumber)
 	bSharedba, bSharedab := deriveSharedKeys(bob, alice.phoneNumber)
 	cSharedca, cSharedac := deriveSharedKeys(charlie, alice.phoneNumber)

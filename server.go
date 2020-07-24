@@ -36,4 +36,4 @@ func newTCPServer(id int, addr string) *tcpServer {
 	return &s
 }
 
-// TODO: implement a "sign" method for TCp server (dial, send public keys, perform checks (?), etc)
+// TODO: implement a "sign" method for TCP server (dial, send public keys, perform checks (?), etc)
