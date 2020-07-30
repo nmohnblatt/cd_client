@@ -5,9 +5,9 @@ This application interacts with the matching server-side application "cd_server"
 
 
 ## Current Functionnality
-- Generate public keys from human-readible identifiers
+- Generate public keys from human-readable identifiers
 - User computes shared key material with contact (requires to obtain private keys from servers)
-- Process single contact upon manual imput
+- Process single contact upon manual input
 - n-out-of-n server version implemented
 - t-out-of-n version of the multi-server service (threshold cryptography)
 
