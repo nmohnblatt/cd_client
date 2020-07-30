@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"go.dedis.ch/kyber/v3/pairing/bn256"
+	"go.dedis.ch/kyber/v3/util/random"
 )
 
 var suite = bn256.NewSuite()
@@ -14,7 +15,21 @@ const prompt string = "> "
 // User will be able to enter their details and contact lists.
 // Program should find existing rendez-vous points and create new ones where needed.
 func main() {
+	// Setup Phase:
+	n := 10
+	t := n/2 + 1
+	masterSecret := suite.GT().Scalar().Pick(random.New())
+	serverList, pubPoly1, pubPoly2 := setupThresholdServers(suite, masterSecret, n, t)
+
+	// Initialise the service's user
 	u1 := initialiseUser()
+
+	// Communicate with servers to obtain the user's private keys
+	fmt.Printf(prompt+"Fetching private keys from %d out of %d servers... \n", t, n)
+	u1.obtainPrivateKeysThreshold(suite, serverList[0:t], pubPoly1, pubPoly2, t, n)
+	fmt.Println(prompt + "Keys successfully received.")
+
+	// Compute shared key material with a manually entered contact number
 	processSingleContactManualInput(u1)
 }
 
@@ -29,9 +44,7 @@ func initialiseUser() *user {
 	var Number string
 	fmt.Scanf("%s", &Number)
 	u1 := newUser(Name, Number)
-	fmt.Println(prompt + "Fetching private keys from server...")
-	u1.sk1, u1.sk2 = dummyRequestKeys(u1, "server1")
-	fmt.Println(prompt + "Done")
+	fmt.Println(prompt + "You have been registered as a user.")
 
 	return u1
 }
