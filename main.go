@@ -26,7 +26,7 @@ func main() {
 
 	// Communicate with servers to obtain the user's private keys
 	fmt.Printf(prompt+"Fetching private keys from %d out of %d servers... \n", t, n)
-	u1.obtainPrivateKeysThreshold(suite, serverList[0:t], pubPoly1, pubPoly2, t, n)
+	u1.obtainPrivateKeysBlindThreshold(suite, serverList[0:t], pubPoly1, pubPoly2, t, n)
 	fmt.Println(prompt + "Keys successfully received.")
 
 	// Compute shared key material with a manually entered contact number

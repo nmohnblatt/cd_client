@@ -10,9 +10,9 @@ This application interacts with the matching server-side application "cd_server"
 - Process single contact upon manual input
 - n-out-of-n server version implemented
 - t-out-of-n version of the multi-server service (threshold cryptography)
+- Use a blinding factor when communicating with a server
 
 ## TODO
-- Use a blinding factor when communicating with a server
 - Networked version of the service
 - Use key material to establish IPFS meeting point
 - Use key material and meeting point to establish end-to-end encryption (link w/ Signal Protocol)

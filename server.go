@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/nmohnblatt/cd_client/blindtbls"
 	"github.com/nmohnblatt/cd_client/moretbls"
 	"go.dedis.ch/kyber/v3"
 	"go.dedis.ch/kyber/v3/pairing"
@@ -70,6 +71,19 @@ func (s multiServer) sign(phoneNumber string) ([]byte, []byte) {
 	buf2, _ := moretbls.Sign2(suite, s.sk2, toSign)
 
 	return buf1, buf2
+}
+
+func (s multiServer) blindsign(H1M, H2M []byte) ([]byte, []byte, error) {
+	buf1, err := blindtbls.Sign(suite, suite.G1(), s.sk1, H1M)
+	if err != nil {
+		return nil, nil, err
+	}
+	buf2, err := blindtbls.Sign(suite, suite.G2(), s.sk2, H2M)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return buf1, buf2, nil
 }
 
 // TCP server to test a networked version of our service

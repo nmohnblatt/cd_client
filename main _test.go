@@ -5,6 +5,7 @@ import (
 
 	"github.com/nmohnblatt/cd_client/moretbls"
 	"go.dedis.ch/kyber/v3"
+	"go.dedis.ch/kyber/v3/pairing/bn256"
 	"go.dedis.ch/kyber/v3/share"
 	"go.dedis.ch/kyber/v3/sign/tbls"
 	"go.dedis.ch/kyber/v3/util/random"
@@ -50,22 +51,21 @@ func TestKeyDerivationLocal(t *testing.T) {
 
 func TestKeyDerivationMultiLocal(t *testing.T) {
 	// Vary the number of servers
-	n := 6
+	n := 10
+	thr := n/2 + 1
+	suite := bn256.NewSuite()
 
-	var servers []server
-
-	// Using dummy servers to test locally (no connection to server)
-	for i := 0; i < n; i++ {
-		servers = append(servers, newDummyServer(i))
-	}
+	// Create a master secret and deal shares
+	secret := suite.GT().Scalar().Pick(random.New())
+	serverList, pubPoly1, pubPoly2 := setupThresholdServers(suite, secret, n, thr)
 
 	alice := newUser("Alice", "07111111111")
 	bob := newUser("Bob", "07222222222")
 	charlie := newUser("Charlie", "07333333333")
 
-	alice.obtainPrivateKeys(servers...)
-	bob.obtainPrivateKeys(servers...)
-	charlie.obtainPrivateKeys(servers...)
+	alice.obtainPrivateKeysBlindThreshold(suite, serverList, pubPoly1, pubPoly2, thr, n)
+	bob.obtainPrivateKeysBlindThreshold(suite, serverList, pubPoly1, pubPoly2, thr, n)
+	charlie.obtainPrivateKeysBlindThreshold(suite, serverList, pubPoly1, pubPoly2, thr, n)
 
 	// Alice and Bob compute shared keys. Charlie tries to use his key material to find A and B's shared keys
 	// Format xSharedxy = e(H(x)^s, H(y)) i.e. the shared point in GT with x in G1 and y in G2 computed using x's private key
@@ -212,6 +212,40 @@ func TestThresholdUserKeys(t *testing.T) {
 	// Check the value recovered from servers matches the expected value
 	if !alice.sk1.Equal(want1) {
 		t.Errorf("Did not compute correct private key 1")
+	}
+	if !alice.sk2.Equal(want2) {
+		t.Errorf("Did not compute correct private key 2")
+	}
+
+}
+
+func TestBlindThresholdUserKeys(t *testing.T) {
+	// Initialise client
+	alice := newUser("Alice", "07111111111")
+
+	// Set number of servers and threshold
+	n := 10
+	thr := n/2 + 1
+
+	// Create a master secret and deal shares
+	secret := suite.GT().Scalar().Pick(random.New())
+	serverList, pubPoly1, pubPoly2 := setupThresholdServers(suite, secret, n, thr)
+
+	// Obtain private key from t servers
+	err := alice.obtainPrivateKeysBlindThreshold(suite, serverList[:thr], pubPoly1, pubPoly2, thr, n)
+	if err != nil {
+		t.Error(err)
+	}
+
+	// Compute the expected values for Alice's private keys
+	want1 := suite.G1().Point().Mul(secret, alice.pk1)
+	want2 := suite.G2().Point().Mul(secret, alice.pk2)
+
+	// Check the value recovered from servers matches the expected value
+	if !alice.sk1.Equal(want1) {
+		t.Errorf("Did not compute correct private key 1")
+	} else {
+		t.Log("private key 1 OK")
 	}
 	if !alice.sk2.Equal(want2) {
 		t.Errorf("Did not compute correct private key 2")
