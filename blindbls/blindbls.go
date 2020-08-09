@@ -90,7 +90,7 @@ func Verify(suite pairing.Suite, group kyber.Group, X kyber.Point, HM, xHM kyber
 			return errors.New("bls: invalid signature")
 		}
 	} else {
-		return errors.New("Group no recognised")
+		return errors.New("Group not recognised")
 	}
 
 	return nil
