@@ -1,6 +1,7 @@
 package hash
 
 import (
+	"errors"
 	"log"
 
 	"go.dedis.ch/kyber/v3"
@@ -30,4 +31,15 @@ func InsecureHashtoG2(suite pairing.Suite, msg []byte) kyber.Point {
 	hashed := suite.G2().Point().Pick(seed)
 
 	return hashed
+}
+
+// Hash hashes a nsg to a point on the requested curve
+func Hash(suite pairing.Suite, group kyber.Group, msg []byte) (kyber.Point, error) {
+	if group.String() == "bn256.G1" {
+		return HashtoG1(suite, msg), nil
+	} else if group.String() == "bn256.G2" {
+		return InsecureHashtoG2(suite, msg), nil
+	} else {
+		return nil, errors.New("hash: group not recognised")
+	}
 }
