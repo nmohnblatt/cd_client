@@ -63,24 +63,6 @@ func dummyRequestKeys(u *user, serverID string) (kyber.Point, kyber.Point) {
 	return sk1, sk2
 }
 
-// Aggregates private key shares obtained from various servers.
-// This version does not implement threshold crypto (i.e. need keys from all servers!)
-func (u *user) aggregatePrivateKeys(sk1Shares, sk2Shares []kyber.Point) error {
-	if len(sk1Shares) != len(sk2Shares) {
-		return errors.New("aggregatePrivateKeys: arguments are of different length")
-	}
-
-	if len(sk1Shares) == 0 {
-		return errors.New("aggregatePrivateKeys: cannot process empty slice")
-	}
-
-	u.sk1 = sumG1Points(sk1Shares...)
-	u.sk2 = sumG2Points(sk2Shares...)
-
-	return nil
-
-}
-
 func (u *user) obtainPrivateKeys(servers ...server) {
 	buf1 := suite.G1().Point()
 	buf2 := suite.G2().Point()
