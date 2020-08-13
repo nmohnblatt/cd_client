@@ -47,8 +47,7 @@ func UnblindShare(group kyber.Group, blindingFactor kyber.Scalar, s []byte) (*sh
 		return &share.PubShare{I: -1, V: nil}, err
 	}
 
-	inv := group.Scalar()
-	inv.Inv(blindingFactor)
+	inv := group.Scalar().Inv(blindingFactor)
 	xHM := axHM.Mul(inv, axHM)
 
 	return &share.PubShare{I: i, V: xHM}, nil
@@ -68,28 +67,6 @@ func Verify(suite pairing.Suite, group kyber.Group, public *share.PubPoly, HM ky
 // shared public key X. The shared public key can be computed by evaluating the
 // public sharing polynomial at index 0.
 func Recover(suite pairing.Suite, group kyber.Group, public *share.PubPoly, HM kyber.Point, sigs []*share.PubShare, t, n int) ([]byte, error) {
-	/* pubShares := make([]*share.PubShare, 0)
-	for _, sig := range sigs {
-		s := tbls.SigShare(sig)
-		i, err := s.Index()
-		if err != nil {
-			return nil, err
-		}
-		if err = blindbls.Verify(suite, group, public.Eval(i).V, msg, s.V
-		}
-		blindSigShares = append(blindSigShares, sig)alue()); err != nil {
-			return nil, err
-		}
-		point := suite.G2().Point()
-		if err := point.UnmarshalBinary(s.Value()); err != nil {
-			return nil, err
-		}f
-		pubShares = append(pubShares, &share.PubShare{I: i, V: point})
-		if len(pubShares) >= t {
-			break
-		}
-	} */
-
 	for _, sig := range sigs {
 		if err := Verify(suite, group, public, HM, sig); err != nil {
 			return nil, err

@@ -61,7 +61,7 @@ func Unblind(group kyber.Group, blindingFactor kyber.Scalar, s []byte) (kyber.Po
 		return nil, err
 	}
 
-	inv := blindingFactor.Inv(blindingFactor)
+	inv := group.Scalar().Inv(blindingFactor)
 	xHM := axHM.Mul(inv, axHM)
 
 	return xHM, nil
