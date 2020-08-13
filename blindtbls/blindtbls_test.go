@@ -12,7 +12,6 @@ import (
 )
 
 func TestUnblindShare(test *testing.T) {
-	// ISSUE: UnblindShare only works for even indexed shares (0, 2, 4, etc...). Why?
 	// SETUP PHASE
 	msg := []byte("Hello threshold Boneh-Lynn-Shacham")
 	suite := bn256.NewSuite()
@@ -27,7 +26,7 @@ func TestUnblindShare(test *testing.T) {
 	if err != nil {
 		test.Error(err)
 	}
-	n := 4
+	n := 6
 	t := n/2 + 1
 	secret := signGroup.Scalar().Pick(suite.RandomStream())
 	priPoly := share.NewPriPoly(keyGroup, t, secret, suite.RandomStream())
@@ -56,13 +55,13 @@ func TestUnblindShare(test *testing.T) {
 	}
 
 	// UNBLIND
-	testSigShares := make([]*share.PubShare, 0)
-	for _, Si := range blindSigShares {
-		buf, err := UnblindShare(signGroup, BF, Si)
+	testSigShares := make([]*share.PubShare, len(blindSigShares))
+	for i := 0; i < len(blindSigShares); i++ {
+		buf, err := UnblindShare(signGroup, BF, blindSigShares[i])
 		if err != nil {
 			test.Error(err)
 		}
-		testSigShares = append(testSigShares, buf)
+		testSigShares[i] = buf
 	}
 
 	// CHECKS
@@ -142,7 +141,6 @@ func TestBlindTBLSRecoverThenUnblind(test *testing.T) {
 }
 
 func TestBlindTBLSUnblindThenRecover(test *testing.T) {
-	// Unblind-then-recover does not work (see issue with UnblindShare)
 	// SETUP PHASE
 	msg := []byte("Hello threshold Boneh-Lynn-Shacham")
 	suite := bn256.NewSuite()

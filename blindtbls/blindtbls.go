@@ -47,7 +47,8 @@ func UnblindShare(group kyber.Group, blindingFactor kyber.Scalar, s []byte) (*sh
 		return &share.PubShare{I: -1, V: nil}, err
 	}
 
-	inv := blindingFactor.Inv(blindingFactor)
+	inv := group.Scalar()
+	inv.Inv(blindingFactor)
 	xHM := axHM.Mul(inv, axHM)
 
 	return &share.PubShare{I: i, V: xHM}, nil
