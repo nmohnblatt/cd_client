@@ -37,11 +37,11 @@ In a separate Terminal window, run the IPFS daemon:
 
     ipfs daemon
 
-You can now go back to the first Terminal window and run the application by simply typing:
+Make sure that the daemon is running (check for the message "Daemon is running"). Leave it to run in the background. You can now go back to the first Terminal window and run the application by simply typing:
 
     cd_client
 
-Alternatively, you can navigate to your GOPATH/bin folder and run the application. In the below example GOPATH was set to the default value $HOME/go:
+Alternatively, you can navigate to your GOPATH/bin folder and run the application. Again in this example GOPATH was set to the default value $HOME/go:
 
     cd $HOME/go/bin
     ./cd_client
