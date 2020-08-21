@@ -28,6 +28,8 @@ Clone the repository into your GOPATH/src folder. In this example, GOPATH is set
     cd $HOME/go/src
     git clone https://github.com/nmohnblatt/cd_client.git
 
+NOTE: you can check the value of GOPATH by running the command `go env GOPATH`
+
 Navigate to the project and install the application:
 
     cd github.com/nmohnblatt/cd_client
