@@ -35,11 +35,11 @@ Navigate to the project and install the application:
     cd github.com/nmohnblatt/cd_client
     go install
 
-In a separate Terminal window, run the IPFS daemon:
+**In a separate Terminal window**, run the IPFS daemon:
 
     ipfs daemon
 
-Make sure that the daemon is running (check for the message "Daemon is running"). Leave it to run in the background. You can now go back to the first Terminal window and run the application by simply typing:
+Make sure that the daemon is running (check for the message "Daemon is running"). Leave it to run in the background. You can now **go back to the first Terminal window** and run the application by simply typing:
 
     cd_client
 
