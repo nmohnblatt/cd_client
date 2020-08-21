@@ -18,17 +18,13 @@ Application has only been tested on Linux. Requires [Go](https://golang.org) v1.
 
 ## Running the application
 
-Clone the repository into your GOPATH/src folder. In this example, GOPATH is set to the default value $HOME/go:
+Clone the repository into your GOPATH/src folder and install the application. In this example, GOPATH is set to the default value $HOME/go:
 
     $ cd $HOME/go/src
     $ git clone https://github.com/nmohnblatt/cd_client.git
+    $ go install github.com/nmohnblatt/cd_client
 
 NOTE: you can check the value of GOPATH by running the command `go env GOPATH`
-
-Navigate to the project and install the application:
-
-    $ cd github.com/nmohnblatt/cd_client
-    $ go install
 
 **In a separate Terminal window**, run the IPFS daemon:
 
