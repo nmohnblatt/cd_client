@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 
+	"go.dedis.ch/kyber/v3"
 	"go.dedis.ch/kyber/v3/pairing/bn256"
-	"go.dedis.ch/kyber/v3/util/random"
+	"go.dedis.ch/kyber/v3/xof/blake2xb"
 )
 
 var suite = bn256.NewSuite()
@@ -18,7 +20,10 @@ func main() {
 	// Setup Phase:
 	n := 10
 	t := n/2 + 1
-	masterSecret := suite.GT().Scalar().Pick(random.New())
+
+	rng := blake2xb.New(nil) // A pseudo RNG which makes this code repeatable for testing.
+
+	masterSecret := suite.GT().Scalar().Pick(rng)
 	serverList, pubPoly1, pubPoly2 := setupThresholdServers(suite, masterSecret, n, t)
 
 	// Initialise the service's user
@@ -30,7 +35,14 @@ func main() {
 	fmt.Println(prompt + "Keys successfully received.")
 
 	// Compute shared key material with a manually entered contact number
-	processSingleContactManualInput(u1)
+	sharedAB, sharedBA := processSingleContactManualInput(u1)
+	// fmt.Println(prompt + "Derived the following keys:\n" + sharedAB.String() + "\n" + sharedBA.String())
+
+	meetingPoint := createMeetingPoint(u1, sharedAB, sharedBA)
+	output := append([]byte("Meeting point "), meetingPoint...)
+	if err := ioutil.WriteFile("mp.txt", output, 0644); err != nil {
+		panic(fmt.Errorf("Could not generate file"))
+	}
 }
 
 // A function that promts the user for their name and number.
@@ -51,12 +63,12 @@ func initialiseUser() *user {
 
 // A function that prompts the user for their contact's phone number.
 // The function computes the contact's corresponding public key and derives shared keys
-func processSingleContactManualInput(u *user) {
+func processSingleContactManualInput(u *user) (kyber.Point, kyber.Point) {
 	fmt.Println(prompt + "Enter your contact's phone number:")
 	var contactNumber string
 	fmt.Scanf("%s", &contactNumber)
 
 	sharedAB, sharedBA := deriveSharedKeys(u, contactNumber)
 
-	fmt.Println(prompt + "Derived the following keys:\n" + sharedAB.String() + "\n" + sharedBA.String())
+	return sharedAB, sharedBA
 }
