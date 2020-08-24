@@ -18,7 +18,7 @@ Application has only been tested on Linux. Requires [Go](https://golang.org) v1.
 
 ## Running the application
 
-Clone the repository into your GOPATH/src folder and install the application. In this example, GOPATH is set to the default value $HOME/go:
+In a new terminal window, clone the repository into your `GOPATH/src` directory and install the application. In this example, `GOPATH` is set to the default value `$HOME/go`:
 
     $ cd $HOME/go/src
     $ git clone https://github.com/nmohnblatt/cd_client.git
@@ -34,7 +34,7 @@ Make sure that the daemon is running (check for the message "Daemon is running")
 
     $ cd_client
 
-Alternatively, you can navigate to your GOPATH/bin folder and run the application. Again in this example GOPATH was set to the default value $HOME/go:
+Alternatively, you can navigate to your `GOPATH/bin` directory and run the application. Again in this example `GOPATH` os set to the default value `$HOME/go`:
 
     $ cd $HOME/go/bin
     $ ./cd_client
