@@ -1,5 +1,5 @@
 # Privacy-Preserving Contact Discovery - Client Application
-UCL COMP0064 - An application to be run by clients using our privacy-preserving Contact Discovery (CD) service.
+UCL COMP0064 - An application to be run by clients using our privacy-preserving Contact Discovery (CD) service (see [dissertation](https://github.com/nmohnblatt/ucl_dissertation))
 
 This application interacts with the matching server-side application "cd_server" (to be built soon...)
 
@@ -34,7 +34,7 @@ Make sure that the daemon is running (check for the message "Daemon is running")
 
     $ cd_client
 
-Alternatively, you can navigate to your `GOPATH/bin` directory and run the application. Again in this example `GOPATH` os set to the default value `$HOME/go`:
+Alternatively, you can navigate to your `GOPATH/bin` directory and run the application. Again in this example `GOPATH` is set to the default value `$HOME/go`:
 
     $ cd $HOME/go/bin
     $ ./cd_client
